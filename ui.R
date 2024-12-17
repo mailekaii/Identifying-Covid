@@ -1,0 +1,202 @@
+library(shiny)
+library(plotly)
+## OVERVIEW TAB INFO
+
+
+overview_tab <- tabPanel("COVID",
+                         h1("What is COVID?"), 
+                         p("COVID is an infectious disease that comes from SARS-CoV-2. "),
+                         img(src = "pic11.png", width = "15%", height = "15%", align = "center"),
+                         h3("What are the symptoms of COVID?"),
+                         p("Coughing, Fever, Runny nose, Body Aches, Sore Throat, Chills"),
+                         h3("How is COVID transmitted?"),
+                         p("COVID can be transmitted by an infectious individual. It can be transmitted through breathing, sneezing, or coughing out droplets containing the virus."
+                         ),
+                         img(src = "pic1.png", width = "25%", height = "25%"),
+                         h3("What is our purpose?"),
+                         p("Our proposal is an informational website that can help save people time and money. Within the website the information we provide can assist in determining the type of illness a person may be experiencing through the information that is being obtained.The development through our website has multiple benefits to our community. The medical field can also benefit from the information that we gather. The power of the data we obtain through our website can help innovate, and protect the community from COVID to live a healthier future.   
+"),
+                         h3(" Data Sources we used:"),
+                         p(" A majority of the data we pulled was COVID in the United States only. Throughout our data we organized the amount of total deaths, total cases, and the hospital rates from COVID. We decided to use these data sets because they provided information from the start of COVID in 2020 all the way up to the current date."),
+                         p("Some limitations to our data is that the number of cases indicated are only the confirmed cases. Many cases of COVID-19 are not reported to international organizations like the World Health Organization or to national governments, so the numbers provided in the data don't include every single case. Data was obtained ethically through looking at confirmed cases from international organizations."),
+                         p("https://ourworldindata.org/covid-cases
+"),
+                         p("https://kingcounty.gov/en/legacy/depts/health/covid-19/data/vaccination.aspx
+"),
+                         img(src = "pic6.gif", width = "25%", height = "25%"),
+                         h4("Creators of website:"),
+                         strong("Maile Gomes, Rohan Chatterjee, Taylor Javelli, Tommy Xu"))
+
+
+
+
+
+
+## VIZ 1 TAB INFO
+
+viz_1_sidebar <- sidebarPanel(
+  titlePanel("COVID-19 Deaths by Year"),
+  sidebarLayout(
+    sidebarPanel(
+      # Adding checkboxes for year selection
+      checkboxGroupInput("selectedYears", "Select Years:",
+                         choices = c("2020", "2021", "2022", "2023", "2024"),
+                         selected = c("2020", "2021", "2022", "2023", "2024")),
+      p("Interactive bar chart showing the most deaths by year.")
+    ),
+    mainPanel(
+      # Output: Display a Plotly plot
+      plotlyOutput("covidDeathsPlot")
+    )
+  )
+)
+#TODO: Put inputs for modifying graph here
+
+
+viz_1_main_panel <- mainPanel(
+  h2("Most Deaths by Year"),
+  plotlyOutput(outputId = "interactiveBarChart"))
+
+viz_1_tab <- tabPanel("Total Deaths",
+                      sidebarLayout(
+                        viz_1_sidebar,
+                        viz_1_main_panel
+                      ),
+                      
+                      img(src = "pic5.png", width = "32%", height = "25%", align = "center"))
+
+
+## VIZ 2 TAB INFO
+
+viz_2_sidebar <- sidebarPanel(
+  h2("COVID-19 Total infected"), 
+  sidebarLayout(
+    sidebarPanel(
+      selectInput("caseType", "Select Case Type:",
+                  choices = c("Current Total Cases by years" = "current",
+                              "Past Total Cases by years" = "past")),
+     
+    ),
+    mainPanel(
+      plotlyOutput("casesPlot")
+    )
+  )
+)
+
+viz_2_main_panel <- mainPanel(
+  h2("Total Cases Graph"),
+  plotlyOutput(outputId = "totalCasesPlot")  # Define plot output for the total cases graph
+)
+
+viz_2_tab <- tabPanel("Total Cases",
+                      sidebarLayout(
+                        viz_2_sidebar,
+                        viz_2_main_panel
+                      ),
+                      img(src = "pic8.jpeg", width = "25%", height = "25%")
+)
+
+## VIZ 3 TAB INFO
+
+viz_3_sidebar <- sidebarPanel(
+  h2("Options for graph"),
+  fluidPage(
+    titlePanel("COVID-19 Hospitalization"),
+    sidebarLayout(
+      sidebarPanel(
+        selectInput("dataChoice", "Choose data type:",
+                    choices = c("Past Hospitalizations" = "past_hosp",
+                                "Current Hospitalizations" = "current_hosp",
+                                "Past ICU Admissions" = "past_icu",
+                                "Current ICU Admissions" = "current_icu"))
+      ),
+      mainPanel(
+        plotlyOutput("hospPlot")
+      )
+    )
+  )
+  )
+  #TODO: Put inputs for modifying graph here
+
+
+viz_3_main_panel <- mainPanel(
+  h2("Total Hospitalization including ICU"),
+  plotlyOutput(outputId = "totalHospICUPlot")  
+  # Define plot output for the total hospitalization including ICU graph
+)
+
+viz_3_tab <- tabPanel("Total Amount of Hospitalizations",
+                      sidebarLayout(
+                        viz_3_sidebar,
+                        viz_3_main_panel
+                      ),
+                      img(src = "pic9.gif", width = "35%", height = "45%")
+)
+
+## CONCLUSIONS TAB INFO
+
+conclusion_tab <- tabPanel("Self- Diagnose",
+                           h1("Have you experienced COVID?"),
+                           p("Interact with generated questions listed below;
+ Check/select options that apply"),
+                           img(src = "pic7.gif", width = "45%", height = "25%", align="right"),
+                           fluidRow(
+                             column(3,
+                                    checkboxGroupInput("checkGroup",
+                                                       h3("Have you been experiencing these symptoms?"),
+                                                       choices = list("Coughing" = 1,
+                                                                      "Fever" = 2,
+                                                                      "Runny Nose" = 3,
+                                                                      "Body Aches" = 4,
+                                                                      "Sore Throat" = 5,
+                                                                      "Chills" = 6,
+                                                                      "Headache" = 7),
+                                                       selected = 1,
+                                    )),
+                             column(3,
+                                    sliderInput("slider1", h3("How many days have you been feeling the previous symptoms?"),
+                                                min = 0, max = 14, value = 0),  
+                             )), h1("Results"),
+                           p("If you have been experiencing 3/7 symptoms (coughing, runny nose,body aches."),
+                           p("You most likely have cold based off of these symptoms, If you have been experiencing these for the past 1-3 days"),
+                           p("If you have been experiencing 5/7 of these symptoms(coughing, fever, runny nose, body aches, sore throat, chills, headache)"),
+                           p("You most likely have COVID if you have been experiencing this for 2-14 days. You should take a COVID test to confirm results or consult with your healthcare provider for more information."),
+                           h4(" A message to the user:"),
+                           p("Thank you for viewing our COVID-based website. A few takeaways we have from this project involve trying to motivate and inform others into living in a safe and healthy community. Through our website, you can see in each tab how COVID has took a big toll on many peoples lives living in the United States. 
+ In the first tab you can see the graph with the total amount of deaths in the U.S. and the affect it had. From our second tab you can notice that we have data about the total infections. With the amount of total infections we notice how easily the disease can be spread and pre-cautions you should take so you do not catch COVID. 
+ Lastly, in our third tab we show data about hospitalization inclduing patients who were inside the ICU. Overall, the key takeaway is that our website is informative about COVID-19, providing data and analysis that is useful. 
+ Not only do you gain valuable information about how easy it is to catch covid, but you also gain the knowledge of how it has affected lives from hospitalization and death. Another takeaway we get out of this website is our self-diagnose questions, based off of research about having symptoms of being sick. We have provided a 
+ self-questionaire to determine if you actually have COVID or if you are experiencing signs of a cold. The last takeaway from our website is that the user should feel motivated to take precautionary measures for COVID, as it is still ever-present in our society, which is shown in this website. 
+   "), img(src = "pic4.gif", width = "15%", height = "15%"),
+                           
+                           h5("Please rate your satisfaction of the website"),
+                           p("0 meaning it was not informational and helpful"),
+                           p("1 meaning it was informational but not helpful"),
+                           p("2 meaning it was informational and helpful but could have improvements in more areas"),
+                           p("3 meaning it was informational and somewhat helpful for the most part"),
+                           p("4 meaning very informational and helpful"),
+                           p("5 meaning it was a perfect website"),
+                           column(3,
+                                  sliderInput("slider1", h5("How do you feel about our COVID website?"),
+                                              min = 0, max = 5, value = 0),
+                                  
+                           ),
+                           
+                           img(src = "pic10.gif", width = "15%", height = "15%")                     
+)
+
+
+
+
+
+
+
+
+ui <- navbarPage("How did COVID affect the USA?",
+                 overview_tab,
+                 
+                 viz_1_tab,
+                 viz_2_tab,
+                 viz_3_tab,
+                 conclusion_tab
+)

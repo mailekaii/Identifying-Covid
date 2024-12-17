@@ -1,0 +1,11 @@
+library(shiny)
+library(dplyr)
+library(plotly)
+library(ggplot2)
+library(bslib)
+library(rsconnect)
+library(stringr)
+source("ui.R")
+source("server.R")
+
+shinyApp(ui = ui, server = server)
